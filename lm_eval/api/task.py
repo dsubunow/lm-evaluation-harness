@@ -952,6 +952,10 @@ class ConfigurableTask(Task):
                 **(self.config.metadata or {}), **(self.config.dataset_kwargs or {})
             )
         else:
+            try:
+                datasets.builder.has_sufficient_disk_space = lambda needed_bytes, directory='.': True
+            except Exception as exp:
+                eval_logger.warning("Could Not load datasets. File download did not work.")
             self.dataset = datasets.load_dataset(
                 path=self.DATASET_PATH,
                 name=self.DATASET_NAME,
